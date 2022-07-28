@@ -33,7 +33,7 @@ public class DBService {
 		Cliente c1 = new Cliente(null, "André Santana", "613.037.750-93", "(61) 93274-06372");
 
 		OS os1 = new OS(null, Prioridade.ALTA, "Teste create OD", Status.ANDAMENTO, t1, c1);
-		OS os2 = new OS(null, Prioridade.BAIXA, "@@@@@@@@@@@", Status.ABERTO, t2, null);
+		OS os2 = new OS(null, Prioridade.BAIXA, "@@@@@@@@@@@", Status.ABERTO, t2, c1);
 
 		t1.getList().add(os1);
 		c1.getList().add(os1);
