@@ -8,59 +8,56 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gabriel.os.domain.Cliente;
 import com.gabriel.os.domain.Pessoa;
-import com.gabriel.os.domain.Tecnico;
-import com.gabriel.os.dtos.TecnicoDTO;
+import com.gabriel.os.dtos.ClienteDTO;
+import com.gabriel.os.repositories.ClienteRepository;
 import com.gabriel.os.repositories.PessoaRepository;
-import com.gabriel.os.repositories.TecnicoRepository;
 import com.gabriel.os.services.exceptions.DataIntegratyViolationException;
 import com.gabriel.os.services.exceptions.ObjectNotFoundException;
 
+
 @Service
-public class TecnicoService {
+public class ClienteService {
 
 	@Autowired
-	private TecnicoRepository repository;
+	private ClienteRepository repository;
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
 
-
 	/*
-	 * Busca Tecnico pelo ID
+	 * Busca Cliente pelo ID
 	 */
-	public Tecnico findById(Integer id) {
-		Optional<Tecnico> obj = repository.findById(id);
+	public Cliente findById(Integer id) {
+		Optional<Cliente> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado! Id: " + id + ", Tipo: " + Tecnico.class.getName()));
+				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 
 	/*
-	 * Busca todos os Tecnicos da base de dados
+	 * Busca todos os Clientes da base de dados
 	 */
-	public List<Tecnico> findAll() {
+	public List<Cliente> findAll() {
 		return repository.findAll();
 	}
 
 	/*
-	 * Cria um Tecnico
+	 * Cria um Cliente
 	 */
-	public Tecnico create(TecnicoDTO objDTO) {
+	public Cliente create(ClienteDTO objDTO) {
 		if (findByCPF(objDTO) != null) {
 			throw new DataIntegratyViolationException("CPF já cadastrado na base de dados!");
 		}
 
-		Tecnico newTec = new Tecnico(null, objDTO.getNome(), objDTO.getCpf(), objDTO.getTelefone());
-
-
-		return repository.save(newTec);
+		return repository.save(new Cliente(null, objDTO.getNome(), objDTO.getCpf(), objDTO.getTelefone()));
 	}
 
 	/*
-	 * Atualiza um Tecnico
+	 * Atualiza um Cliente
 	 */
-	public Tecnico update(Integer id, @Valid TecnicoDTO objDTO) {
-		Tecnico oldObj = findById(id);
+	public Cliente update(Integer id, @Valid ClienteDTO objDTO) {
+		Cliente oldObj = findById(id);
 
 		if (findByCPF(objDTO) != null && findByCPF(objDTO).getId() != id) {
 			throw new DataIntegratyViolationException("CPF já cadastrado na base de dados!");
@@ -69,27 +66,26 @@ public class TecnicoService {
 		oldObj.setNome(objDTO.getNome());
 		oldObj.setCpf(objDTO.getCpf());
 		oldObj.setTelefone(objDTO.getTelefone());
-		
 		return repository.save(oldObj);
 	}
 
 	/*
-	 * Deleta um Tecnico pelo ID
+	 * Deleta um Cliente pelo ID
 	 */
 	public void delete(Integer id) {
-		Tecnico obj = findById(id);
+		Cliente obj = findById(id);
 
 		if (obj.getList().size() > 0) {
-			throw new DataIntegratyViolationException("Técnico possui Ordens de Serviço, não pode ser deletado!");
+			throw new DataIntegratyViolationException("Pessoa possui Ordens de Serviço, não pode ser deletado!");
 		}
 
 		repository.deleteById(id);
 	}
 
 	/*
-	 * Busca Tecnico pelo CPF
+	 * Busca Cliente pelo CPF
 	 */
-	private Pessoa findByCPF(TecnicoDTO objDTO) {
+	private Pessoa findByCPF(ClienteDTO objDTO) {
 		Pessoa obj = pessoaRepository.findByCPF(objDTO.getCpf());
 
 		if (obj != null) {
@@ -97,4 +93,5 @@ public class TecnicoService {
 		}
 		return null;
 	}
+
 }

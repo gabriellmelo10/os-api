@@ -2,25 +2,32 @@ package com.gabriel.os.dtos;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.gabriel.os.domain.Tecnico;
+import com.gabriel.os.domain.Cliente;
 
-public class TecnicoDTO implements Serializable {
+public class ClienteDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer id;
+
+	@NotEmpty(message = "O campo NOME é requerido")
 	private String nome;
-	
+
 	@CPF
+	@NotEmpty(message = "O campo CPF é requerido")
 	private String cpf;
+
+	@NotEmpty(message = "O campo TELEFONE é requerido")
 	private String telefone;
-	
-	public TecnicoDTO() {
+
+	public ClienteDTO() {
 		super();
 	}
 
-	public TecnicoDTO(Tecnico obj) {
+	public ClienteDTO(Cliente obj) {
 		super();
 		this.id = obj.getId();
 		this.nome = obj.getNome();
@@ -59,5 +66,5 @@ public class TecnicoDTO implements Serializable {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	
+
 }
